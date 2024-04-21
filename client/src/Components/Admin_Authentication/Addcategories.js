@@ -64,7 +64,7 @@ const Addcategories = () => {
       formdata.append("categoryName", categoryName)
       formdata.append("description", description)
       formdata.append("file", file)
-
+    
       const config = {
         "Content-Type": "multipart/form-data"
       }
@@ -72,7 +72,7 @@ const Addcategories = () => {
         formdata,
         config
       }
-
+      console.log(datasend)
       dispatch(adminAddCategory(datasend)).then((res) => {
         if (res.payload) {
           setInputvalue({

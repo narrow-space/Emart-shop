@@ -3,6 +3,7 @@ import { commonrequest } from "../Commonrequest";
 
 // Add Category APi
 export const addCategoryApi = async (data, header) => {
+  console.log(data)
   return await commonrequest("POST", `${BASE_URL}/product/api/addcategory`, data, header, "admin"
   );
 };

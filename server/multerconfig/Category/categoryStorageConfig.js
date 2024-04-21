@@ -1,31 +1,39 @@
-const multer =require("multer");
-// /storage config
-const storage = multer.diskStorage({
-    destination:(req,file,callback)=>{
-     callback(null,"./Categoryimguploads")
+const multer = require("multer");
+const fs = require("fs");
+const path = require("path");
 
-    },
-    filename:(req,file,callback)=>{
-        const filename =`image-${Date.now()}.${file.originalname}`
-        callback(null,filename)
-    }
-})
-// filter
+// Define the directory path
+const uploadDirectory = "./categoryuploads";
 
-const filefilter=(req,file,callback)=>{
-    if(file.mimetype === "image/png" || file.mimetype ==="image/jpg" ||file.mimetype === "image/jpeg" ||file.mimetype === "image/webp"||file.mimetype === "image/avif"){
-        callback(null,true)
-    }else{
-        callback(null,false)
-            return callback(new Error("only png,jpg,jpeg formatted Allow"))
-        
-    }
+// Create the directory if it doesn't exist
+if (!fs.existsSync(uploadDirectory)) {
+    fs.mkdirSync(uploadDirectory, { recursive: true });
 }
 
-const categoryupload =multer({
-    storage:storage,
-    fileFilter:filefilter
-})
+// Storage configuration
+const storage = multer.diskStorage({
+    destination: (req, file, callback) => {
+        callback(null, uploadDirectory);
+    },
+    filename: (req, file, callback) => {
+        const filename = file.originalname;
+        callback(null, filename);
+    }
+});
 
+// File filter function
+const filefilter = (req, file, callback) => {
+    if (file.mimetype === "image/png" || file.mimetype === "image/jpg" || file.mimetype === "image/jpeg" || file.mimetype === "image/webp" || file.mimetype === "image/avif") {
+        callback(null, true);
+    } else {
+        callback(new Error("Only PNG, JPG, JPEG, WEBP, and AVIF formatted files are allowed"));
+    }
+};
 
-module.exports =categoryupload;
+// Multer instance
+const categoryupload = multer({
+    storage: storage,
+    fileFilter: filefilter
+});
+
+module.exports = categoryupload;
