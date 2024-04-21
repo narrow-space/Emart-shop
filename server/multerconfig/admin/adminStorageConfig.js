@@ -1,41 +1,30 @@
-const multer = require("multer");
-const fs = require("fs");
+const multer =require("multer");
 
-// Define the directory path
-const uploadDirectory = "./adminuploads";
+///storage config
+const storage = multer.diskStorage({
+    destination:(req,file,callback)=>{
+     callback(null,"./adminuploads")
 
-// Create the directory if it doesn't exist
-if (!fs.existsSync(uploadDirectory)) {
-    fs.mkdirSync(uploadDirectory, { recursive: true });
+    },
+    filename:(req,file,callback)=>{
+        const filename =`image-${Date.now()}.${file.originalname}`
+        callback(null,filename)
+    }
+})
+// filter
+
+const filefilter=(req,file,callback)=>{
+    if(file.mimetype === "image/png" || file.mimetype ==="image/jpg" ||file.mimetype === "image/jpeg"){
+        callback(null,true)
+    }else{
+        callback(null,false)
+            return callback(new Error("only png,jpg,jpeg formatted Allow"))
+        
+    }
 }
 
-// Storage configuration
-const storage = multer.diskStorage({
-    destination: (req, file, callback) => {
-        callback(null, uploadDirectory);
-    },
-    filename: (req, file, callback) => {
-        const filename = file.originalname;
-        callback(null, filename);
-    }
-});
-
-// File filter function
-const fileFilter = (req, file, callback) => {
-    // Check if the file type is allowed
-    if (file.mimetype === "image/png" || file.mimetype === "image/jpg" || file.mimetype === "image/jpeg") {
-        // Accept the file
-        callback(null, true);
-    } else {
-        // Reject the file
-        callback(new Error("Only PNG, JPG, and JPEG formatted files are allowed"));
-    }
-};
-
-// Multer instance
-const upload = multer({
-    storage: storage,
-    fileFilter: fileFilter
-});
-
-module.exports = upload;
+const upload =multer({
+    storage:storage,
+    fileFilter:filefilter
+})
+module.exports =upload;

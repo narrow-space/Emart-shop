@@ -1,9 +1,8 @@
 const multer =require("multer");
-
-///storage config
+// /storage config
 const storage = multer.diskStorage({
     destination:(req,file,callback)=>{
-     callback(null,"./adminuploads")
+     callback(null,"./productsimguploads")
 
     },
     filename:(req,file,callback)=>{
@@ -14,7 +13,7 @@ const storage = multer.diskStorage({
 // filter
 
 const filefilter=(req,file,callback)=>{
-    if(file.mimetype === "image/png" || file.mimetype ==="image/jpg" ||file.mimetype === "image/jpeg"){
+    if(file.mimetype === "image/png" || file.mimetype ==="image/jpg" ||file.mimetype === "image/jpeg" ||file.mimetype === "image/webp"||file.mimetype === "image/avif"||file.mimetype === "image/gif"){
         callback(null,true)
     }else{
         callback(null,false)
@@ -23,8 +22,10 @@ const filefilter=(req,file,callback)=>{
     }
 }
 
-const upload =multer({
+const productsupload =multer({
     storage:storage,
     fileFilter:filefilter
 })
-module.exports =upload;
+
+
+module.exports =productsupload;
